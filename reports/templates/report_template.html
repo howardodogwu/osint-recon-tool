@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OSINT Recon Report</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 32px 40px 40px 40px;
+        }
+        h1 {
+            color: #2a3a4b;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .section {
+            margin-top: 32px;
+            padding: 24px;
+            border-radius: 8px;
+            background: #f9fafb;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.03);
+        }
+        .section h2 {
+            color: #3b5bdb;
+            margin-top: 0;
+        }
+        .result-list {
+            list-style: none;
+            padding: 0;
+        }
+        .result-list li {
+            margin-bottom: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .result-list li:last-child {
+            border-bottom: none;
+        }
+        .exists {
+            color: #2b8a3e;
+            font-weight: bold;
+        }
+        .not-found {
+            color: #c92a2a;
+            font-weight: bold;
+        }
+        .label {
+            display: inline-block;
+            background: #e7f5ff;
+            color: #1971c2;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 0.95em;
+            margin-right: 8px;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #adb5bd;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OSINT Recon Report</h1>
+        <div class="footer">Generated on {{ now }}</div>
+
+        {% if data.username and data.username %}
+        <div class="section">
+            <h2>Username Investigation</h2>
+            <ul class="result-list">
+                {% for platform, details in data.username.items() %}
+                    <li>
+                        <span class="label">{{ platform }}</span>
+                        {% if details.exists %}
+                            <span class="exists">Found</span> — 
+                            <a href="{{ details.url }}" target="_blank">{{ details.url }}</a>
+                        {% else %}
+                            <span class="not-found">Not Found</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if data.domain and data.domain %}
+        <div class="section">
+            <h2>Domain Intelligence</h2>
+            <ul class="result-list">
+                {% for key, value in data.domain.items() %}
+                    <li>
+                        <span class="label">{{ key|capitalize }}</span>
+                        {{ value }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if data.email and data.email %}
+        <div class="section">
+            <h2>Email Intelligence</h2>
+            <ul class="result-list">
+                {% for key, value in data.email.items() %}
+                    <li>
+                        <span class="label">{{ key|capitalize }}</span>
+                        {% if value is string %}
+                            {{ value }}
+                        {% else %}
+                            <pre style="background:#f1f3f5;padding:8px;border-radius:4px;">{{ value | tojson(indent=2) }}</pre>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

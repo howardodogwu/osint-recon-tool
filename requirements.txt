@@ -1,0 +1,7 @@
+requests
+beautifulsoup4
+whois
+jinja2
+pdfkit
+Flask
+Flask-WTF
